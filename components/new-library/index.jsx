@@ -5,9 +5,11 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import { hashHistory } from 'react-router';
 import Dialog from 'material-ui/Dialog';
+import NumberInput from 'material-ui-number-input';
 
 import { connect } from 'react-redux';
 import { addNewLibrary } from '../../actions';
+
 
 const styles = {
     customWidth: {
@@ -25,10 +27,10 @@ const styles = {
     dropdown: {
         width: "52%",
         marginTop: 17,
-        marginRight: -26
+        marginRight: -15
     },
     submit: {
-        marginLeft: 12
+        marginLeft: 24
     }
 };
 
@@ -41,21 +43,86 @@ class NewLibrary extends Component {
         this.toggle = () => this.setState(s => ({ open: !s.open }));
 
         this.dispatch = props.dispatch;
+        
+        this.onKeyDown = (event) => {
+            console.log(`onKeyDown ${event.key}`);
+          };
+          
+          this.onChange = (event, value) => {
+            const e = event;
+            console.log(`onChange ${e.target.value}, ${value}`);
+          };
+          
+          this.onError = (error) => {
+            let errorText;
+            console.log(error);
+            switch (error) {
+              case 'required':
+                errorText = 'This field is required';
+                break;
+              case 'invalidSymbol':
+                errorText = 'Numbers only please';
+                break;
+              case 'incompleteNumber':
+                errorText = 'Number is incomplete';
+                break;
+              case 'singleMinus':
+                errorText = 'Minus can be use only for negativity';
+                break;
+              case 'singleFloatingPoint':
+                errorText = 'There is already a floating point';
+                break;
+              case 'singleZero':
+                errorText = 'Floating point is expected';
+                break;
+              case 'min':
+                errorText = 'No negative numbers please';
+                break;
+              case 'max':
+                  errorText = 'Max id limit is 99999';
+                  break;
+              }
+              this.setState({ errorText: errorText });
+            };
+         
+            this.onValid = (value) => {
+              console.debug(`${value} is a valid number`);
+            };
+         
+            this.onRequestValue = (value) => {
+              console.log(`request ${JSON.stringify(value)}`);
+              this.setState({ value: value })
+            }
     }
+    
+    
 
     render() {
         const actions = [<RaisedButton label="Cancel" onTouchTap={this.toggle} />];
+        const { state, onChange, onError, onKeyDown, onValid, onRequestValue } = this;
         return (
             require('./new-library.postcss'),
             <div className="new-library-wr">
                 <div className="inputs">
-                    <TextField onChange={(e) => this.setState({ lib: Object.assign(this.state.lib, { id: e.target.value, idDirty: true }) })}
-                        style={styles.textbox}
-                        type="number" min="1"
-                        errorText={this.state.lib.idDirty && !this.state.lib.id && this.props.errorText || ""}
-                        underlineFocusStyle={styles.underline}
-                        floatingLabelFocusStyle={styles.floatingText}
-                        floatingLabelText="Library ID*" />
+                	<NumberInput
+                	       value={state.value}
+                	       required
+                	       defaultValue={1}
+                	       min={0}
+                	       max={99999}
+                	       strategy="warn"
+                	       errorText={state.errorText}
+                	       onValid={onValid}
+                	       onError={onError}
+                	       onRequestValue={onRequestValue}
+                	       onKeyDown={onKeyDown}
+                	       onChange={(e) => this.setState({ lib: Object.assign(this.state.lib, { id: e.target.value, idDirty: true }) })}
+                	           style={styles.textbox}
+                	           errorText={this.state.lib.idDirty && !this.state.lib.id && this.props.errorText || ""}
+                	           underlineFocusStyle={styles.underline}
+                	           floatingLabelFocusStyle={styles.floatingText}
+                	           floatingLabelText="Library ID*"
+                         />
 
                     <TextField onChange={(e) => this.setState({ lib: Object.assign(this.state.lib, { shortName: e.target.value, shortNameDirty: true }) })}
                         style={styles.textbox}

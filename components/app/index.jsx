@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Sidebar from './sidebar';
+import Menubar from './menubar';
 
 class App extends Component {
     constructor(props) {
@@ -11,12 +11,24 @@ class App extends Component {
         return (
             require('./app.postcss'),
             <div className="app-wr">
-                <Sidebar {...this.props} />
                 <div className="content-wr">
                     <div className="route-header">
-                        <span className="text">{this.props.routes[1].title}</span>
+                    <div className="content">
+                    	<div className="header-title">
+		                    <div className="logo">
+		                        <a href="/"><img src={require('./uq-logo-white.svg')} /></a>
+		                    </div>
+	                        <span className="text">{this.props.routes[1].title}</span>
+                        </div>
+                        <div className="header-actions">
+	                        <Menubar {...this.props} />
+                        </div>
                     </div>
+                    </div>
+                    
+                    <div className="content">
                     {this.props.children}
+                    </div>
                 </div>
             </div>
         );
@@ -26,7 +38,7 @@ class App extends Component {
 App.defaultProps = {
     menuItems: [
         { title: "Libraries", route: "/", name: "libraries" },
-        { title: "New Library", route: "/new", name: "newLibrary" },
+        { title: "New Library", route: "/New", name: "newLibrary" },
         { title: "Computer Availability", route: "/computers", name: "computersAvailability" }
     ]
 }

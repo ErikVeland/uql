@@ -9,15 +9,11 @@ const styles = {
     title: {
         fontSize: 24
     },
-    grid: {
-        width: "calc(100vw - 345px)"
-    },
     wr: {
         padding: "20px"
     },
     card: {
-        marginLeft: 5,
-        marginRight: 5
+        margin: 5
     }
 }
 

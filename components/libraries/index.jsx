@@ -22,9 +22,6 @@ const styles = {
         color: "#49075e",
         marginLeft: 12,
         marginBottom: -18
-    },
-    grid: {
-        width: "calc(100vw - 275px)"
     }
 };
 
@@ -61,7 +58,7 @@ class Libraries extends Component {
     render() {
         return (
             require('./libraries.postcss'),
-            <div>
+            <div className="grid">
                 <div className="libraries-wr">
                     <TextField onChange={(e) => this.dispatch(searchLibraries(this.state.libs, e.target.value))}
                         underlineFocusStyle={styles.underline}
