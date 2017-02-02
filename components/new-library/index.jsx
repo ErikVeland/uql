@@ -23,12 +23,12 @@ const styles = {
         width: "49%"
     },
     dropdown: {
-        width: "50%",
-        marginTop: 17
+        width: "52%",
+        marginTop: 17,
+        marginRight: -26
     },
     submit: {
-        marginLeft: 12,
-        backgroundColor: "#008000"
+        marginLeft: 12
     }
 };
 
@@ -44,39 +44,46 @@ class NewLibrary extends Component {
     }
 
     render() {
-        const actions = [<RaisedButton label="OK" onTouchTap={this.toggle} />];
-        const { handleSubmit } = this.props;
+        const actions = [<RaisedButton label="Cancel" onTouchTap={this.toggle} />];
         return (
             require('./new-library.postcss'),
             <div className="new-library-wr">
-            	<form onSubmit={handleSubmit}>
                 <div className="inputs">
                     <TextField onChange={(e) => this.setState({ lib: Object.assign(this.state.lib, { id: e.target.value, idDirty: true }) })}
                         style={styles.textbox}
+                        type="number" min="1"
                         errorText={this.state.lib.idDirty && !this.state.lib.id && this.props.errorText || ""}
                         underlineFocusStyle={styles.underline}
                         floatingLabelFocusStyle={styles.floatingText}
                         floatingLabelText="Library ID*" />
 
+                    <TextField onChange={(e) => this.setState({ lib: Object.assign(this.state.lib, { shortName: e.target.value, shortNameDirty: true }) })}
+                        style={styles.textbox}
+                        errorText={
+                            this.state.lib.shortNameDirty && !this.state.lib.shortName && this.props.errorText ||
+                            this.state.lib.shortNameDirty && this.state.lib.shortName.length < 5 && this.props.minLenErrorText(5) ||
+                            this.state.lib.shortNameDirty && this.state.lib.shortName.length > 5 && this.props.maxLenErrorText(5) || ""
+                        }
+                        underlineFocusStyle={styles.underline}
+                        floatingLabelFocusStyle={styles.floatingText}
+                        floatingLabelText="Library short name*" />
+
                     <TextField onChange={(e) => this.setState({ lib: Object.assign(this.state.lib, { name: e.target.value, nameDirty: true }) })}
                         style={styles.textbox}
-                        errorText={this.state.lib.nameDirty && !this.state.lib.name && this.props.errorText || ""}
+                        maxlength="50"
+                        errorText={
+                            this.state.lib.nameDirty && !this.state.lib.name && this.props.errorText ||
+                            this.state.lib.nameDirty && this.state.lib.name.length > 50 && this.props.maxLenErrorText(50) || ""
+                        }
                         underlineFocusStyle={styles.underline}
                         floatingLabelFocusStyle={styles.floatingText}
                         floatingLabelText="Library name*" />
-                        
-                        
-                        
-                                            <TextField onChange={(e) => this.setState({ lib: Object.assign(this.state.lib, { shortName: e.target.value, shortNameDirty: true }) })}
-                                                style={styles.textbox}
-                                                errorText={this.state.lib.shortNameDirty && !this.state.lib.shortName && this.props.errorText || ""}
-                                                underlineFocusStyle={styles.underline}
-                                                floatingLabelFocusStyle={styles.floatingText}
-                                                floatingLabelText="Library short name*" />
 
-                    <DropDownMenu value={this.state.value} onChange={this.handleChange} style={styles.dropdown}
-                    floatingLabelFocusStyle={styles.floatingText}
-                    floatingLabelText="Campus*" >
+                    <DropDownMenu value={this.state.value}
+                        onChange={this.handleChange}
+                        style={styles.dropdown}
+                        autoWidth={false}>
+
                         {this.props.campusList.map((it) => {
                             return (<MenuItem value={it.value} primaryText={it.text} />);
                         })}
@@ -93,11 +100,10 @@ class NewLibrary extends Component {
                             name: this.state.lib.name,
                             campusId: this.state.value
                         }));*/
-                    } } disabled={!this.state.lib.id || !this.state.lib.shortName || !this.state.lib.name} style={styles.submit} label="Create library" />
-                </div> 
-                </form>
+                    } } disabled={!this.state.lib.id || !this.state.lib.shortName || !this.state.lib.name} style={styles.submit} label="Submit" />
+                </div>
                 <Dialog actions={actions} open={this.state.open}>
-                    Library has been created
+                    Library is created!
                 </Dialog>
             </div>
         );
@@ -112,7 +118,9 @@ NewLibrary.defaultProps = {
         { value: 4, text: 'PACE' },
         { value: 5, text: 'Mater' }
     ],
-    errorText: "This field is required"
+    errorText: "This field is required",
+    minLenErrorText: (val) => `Field length cannot be less than ${val}`,
+    maxLenErrorText: (val) => `Field length cannot be more than ${val}`
 }
 
 export default connect()(NewLibrary);
