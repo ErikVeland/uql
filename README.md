@@ -21,6 +21,9 @@ Demo site: http://128.199.188.240:4000
 
 http://localhost:4000
 
+### Unit testing
+- npm test -- --watch
+
 ## Implementation time
 
 Total time spent on this app over five days was approximately 30 hours, roughly divided by 70% React/Redux coding and interfacing with API, 30% implementing Material UI. Most time was spent developing the main library list, then the Add Library mini-app, and finally an even split between the detail view and All computer availability mini apps. If I had more time I'd implement a map view in details from the coordinates with directions as well as a more refined UI.
